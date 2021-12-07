@@ -45,4 +45,10 @@ public class UserController {
             }
         }
     }
+
+    /*@RequestMapping(value = "getMessageHistory", method = RequestMethod.POST)
+    @ResponseBody
+    public String[] getMessageHistory(@RequestBody String messagesCont){
+
+    }*/
 }
