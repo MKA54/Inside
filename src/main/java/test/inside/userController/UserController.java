@@ -9,6 +9,8 @@ import test.inside.model.Token;
 import test.inside.model.User;
 import test.inside.service.UserService;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Controller
 @RequestMapping("/inside")
 public class UserController {
@@ -29,9 +31,19 @@ public class UserController {
 
     @RequestMapping(value = "addMessage", method = RequestMethod.POST)
     @ResponseBody
-    public void addMessage(@RequestBody String message) {
+    public void addMessage(@RequestHeader("Authorization") String token, @RequestBody String message) {
         MessageDto m = gson.fromJson(message, MessageDto.class);
 
-        userService.addMessage(m);
+        Token t = new Token();
+        t.setToken(userService.createToken(m.getName()).toString());
+
+        if (hasText(token) && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+
+            if (t.toString().equals(token)) {
+                System.out.println("GOOD");
+                userService.addMessage(m);
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
 package test.inside.service;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,16 +88,5 @@ public class UserService {
                 return;
             }
         }
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-            return true;
-        } catch (ExpiredJwtException expEx) {
-            System.out.println(expEx.getMessage());
-        }
-
-        return false;
     }
 }
