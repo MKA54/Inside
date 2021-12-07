@@ -41,7 +41,6 @@ public class UserController {
             token = token.substring(7);
 
             if (t.toString().equals(token)) {
-                System.out.println("GOOD");
                 userService.addMessage(m);
             }
         }
