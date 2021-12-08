@@ -6,8 +6,8 @@ import test.inside.model.User;
 import java.util.List;
 
 @Repository
-public class UserDaoImpl extends GenericDaoImpl<User, Long> implements UserDao {
-    public UserDaoImpl() {
+public class UserImplDao extends UserGenericDaoImpl<User, Long> implements UserDao {
+    public UserImplDao() {
         super(User.class);
     }
 

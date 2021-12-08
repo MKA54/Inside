@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.List;
 
 @Transactional
-public class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK> {
+public class UserGenericDaoImpl<T, PK extends Serializable> implements UserGenericDao<T, PK> {
     @PersistenceContext
     protected EntityManager entityManager;
 
     protected Class<T> clazz;
 
-    public GenericDaoImpl(Class<T> type) {
+    public UserGenericDaoImpl(Class<T> type) {
         this.clazz = type;
     }
 

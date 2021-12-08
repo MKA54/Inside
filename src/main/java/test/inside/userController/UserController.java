@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import test.inside.dto.MessageDto;
 import test.inside.model.Token;
 import test.inside.model.User;
+import test.inside.service.MessageService;
+import test.inside.service.TokenService;
 import test.inside.service.UserService;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -15,10 +17,14 @@ import static org.springframework.util.StringUtils.hasText;
 @RequestMapping("/inside")
 public class UserController {
     private final UserService userService;
+    private final MessageService messageService;
+    private final TokenService tokenService;
     private final Gson gson = new GsonBuilder().create();
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MessageService messageService, TokenService tokenService) {
         this.userService = userService;
+        this.messageService = messageService;
+        this.tokenService = tokenService;
     }
 
     @RequestMapping(value = "authorization", method = RequestMethod.POST)
@@ -34,21 +40,36 @@ public class UserController {
     public void addMessage(@RequestHeader("Authorization") String token, @RequestBody String message) {
         MessageDto m = gson.fromJson(message, MessageDto.class);
 
-        Token t = new Token();
-        t.setToken(userService.createToken(m.getName()).toString());
+        if (tokenService.isToken(token)) {
+            token = tokenService.getToken(token);
 
-        if (hasText(token) && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-
-            if (t.toString().equals(token)) {
-                userService.addMessage(m);
+            if (token.equals(tokenService.getUserToken(m.getName()))) {
+                messageService.addMessage(userService.getUserId(m.getName()), m);
             }
         }
     }
 
-    /*@RequestMapping(value = "getMessageHistory", method = RequestMethod.POST)
+    @RequestMapping(value = "getMessageHistory", method = RequestMethod.POST)
     @ResponseBody
-    public String[] getMessageHistory(@RequestBody String messagesCont){
+    public String[] getMessageHistory(@RequestHeader("Authorization") String token, @RequestBody String message) {
+        MessageDto m = gson.fromJson(message, MessageDto.class);
 
-    }*/
+        if (!(hasText(m.getMessage()) && m.getMessage().startsWith("history "))) {
+            System.out.println("The message format is not correct");
+
+            return null;
+        }
+
+        m.setMessage(m.getMessage().substring(8));
+
+        if (tokenService.isToken(token)) {
+            token = tokenService.getToken(token);
+
+            if (token.equals(tokenService.getUserToken(m.getName()))) {
+                return messageService.getHistoryMessage(userService.getUserId(m.getName()), m.getMessage());
+            }
+        }
+
+        return null;
+    }
 }
