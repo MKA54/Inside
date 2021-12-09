@@ -54,14 +54,6 @@ public class UserController {
     public String[] getMessageHistory(@RequestHeader("Authorization") String token, @RequestBody String message) {
         MessageDto m = gson.fromJson(message, MessageDto.class);
 
-        if (!(hasText(m.getMessage()) && m.getMessage().startsWith("history "))) {
-            System.out.println("The message format is not correct");
-
-            return null;
-        }
-
-        m.setMessage(m.getMessage().substring(8));
-
         if (tokenService.isToken(token)) {
             token = tokenService.getToken(token);
 

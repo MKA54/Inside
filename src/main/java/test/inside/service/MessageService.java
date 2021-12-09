@@ -44,27 +44,37 @@ public class MessageService {
 
     }
 
-    public String[] getHistoryMessage(Long userId, String message){
-       List<Message> history = messageDao.getMessageHistory(userId);
+    public String[] getHistoryMessage(Long userId, String message) {
+        if (!(hasText(message) && message.startsWith("history "))) {
+            System.out.println("The message format is not correct");
 
-       int messagesCount = Integer.parseInt(message);
+            return null;
+        }
 
-        String[] s;
+        message = message.substring(8);
 
-       if(messagesCount > history.size()){
-           s = new String[history.size()];
-       }else {
-           s = new String[messagesCount];
-       }
+        List<Message> history = messageDao.getMessageHistory(userId);
 
-       int i = 0;
+        Message[] historyArray = history.toArray(new Message[0]);
 
-       for (Message m : history){
-           s[i] = m.getMessage();
+        int messagesCount = Integer.parseInt(message);
 
-           i++;
-       }
+        String[] result;
 
-        return s;
+        if (historyArray.length > messagesCount) {
+            result = new String[messagesCount];
+        } else {
+            result = new String[historyArray.length];
+        }
+
+        for (int i = historyArray.length - 1, j = 0; i >= 0; i--, j++) {
+            if (j == messagesCount) {
+                break;
+            }
+
+            result[j] = historyArray[i].getMessage();
+        }
+
+        return result;
     }
 }
