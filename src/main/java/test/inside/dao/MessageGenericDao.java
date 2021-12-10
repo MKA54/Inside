@@ -10,5 +10,5 @@ public interface MessageGenericDao<T, PK extends Serializable> {
     void create(T obj);
 
     @Transactional
-    List<T> findAll();
+    List<T> getMessageHistoryUsers(Long userId);
 }

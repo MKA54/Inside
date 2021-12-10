@@ -3,8 +3,10 @@ package test.inside.service;
 import org.springframework.stereotype.Service;
 import test.inside.dao.MessageDao;
 import test.inside.dto.MessageDto;
+import test.inside.model.History;
 import test.inside.model.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -44,7 +46,7 @@ public class MessageService {
 
     }
 
-    public String[] getHistoryMessage(Long userId, String message) {
+    public List<History> getHistoryMessage(Long userId, String message) {
         if (!(hasText(message) && message.startsWith("history "))) {
             System.out.println("The message format is not correct");
 
@@ -52,27 +54,33 @@ public class MessageService {
         }
 
         message = message.substring(8);
-
-        List<Message> history = messageDao.getMessageHistory(userId);
-
-        Message[] historyArray = history.toArray(new Message[0]);
-
         int messagesCount = Integer.parseInt(message);
 
-        String[] result;
+        if (messagesCount < 1) {
+            System.out.println("Incorrect number of messages sent, history: " + messagesCount);
 
-        if (historyArray.length > messagesCount) {
-            result = new String[messagesCount];
-        } else {
-            result = new String[historyArray.length];
+            return null;
         }
 
-        for (int i = historyArray.length - 1, j = 0; i >= 0; i--, j++) {
-            if (j == messagesCount) {
-                break;
+        List<Message> allHistory = messageDao.getMessageHistory(userId);
+
+        List<History> result = new ArrayList<>();
+
+        if (messagesCount > allHistory.size()) {
+            allHistory.forEach(m -> result.add(new History(m.getMessage())));
+
+            return result;
+        }
+
+        int startIndex = allHistory.size() - messagesCount;
+        int i = 0;
+
+        for (Message m : allHistory) {
+            if (i >= startIndex) {
+                result.add(new History(m.getMessage()));
             }
 
-            result[j] = historyArray[i].getMessage();
+            i++;
         }
 
         return result;

@@ -12,7 +12,7 @@ public class UserImplDao extends UserGenericDaoImpl<User, Long> implements UserD
     }
 
     @Override
-    public List<User> getAllContacts() {
+    public List<User> getAllUsers() {
         return findAll();
     }
 }

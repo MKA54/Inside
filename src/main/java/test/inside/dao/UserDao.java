@@ -5,5 +5,5 @@ import test.inside.model.User;
 import java.util.List;
 
 public interface UserDao extends UserGenericDao<User, Long> {
-    List<User> getAllContacts();
+    List<User> getAllUsers();
 }

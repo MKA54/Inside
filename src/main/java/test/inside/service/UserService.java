@@ -31,7 +31,7 @@ public class UserService {
             return null;
         }
 
-        for (User u : userDao.getAllContacts()) {
+        for (User u : userDao.getAllUsers()) {
             if (name.equals(u.getName())) {
                 if (password.equals(u.getPassword())) {
                     return tokenService.createToken(user.getName());
@@ -45,7 +45,7 @@ public class UserService {
     }
 
     public Long getUserId(String name) {
-        for (User user : userDao.getAllContacts()) {
+        for (User user : userDao.getAllUsers()) {
             if (user.getName().equals(name)) {
 
                 return user.getId();
