@@ -38,16 +38,18 @@ public class UserController {
 
     @RequestMapping(value = "addMessage", method = RequestMethod.POST)
     @ResponseBody
-    public void addMessage(@RequestHeader("Authorization") String token, @RequestBody String message) {
+    public Boolean addMessage(@RequestHeader("Authorization") String token, @RequestBody String message) {
         MessageDto m = gson.fromJson(message, MessageDto.class);
 
         if (tokenService.isToken(token)) {
             token = tokenService.getToken(token);
 
             if (token.equals(tokenService.getUserToken(m.getName()))) {
-                messageService.addMessage(userService.getUserId(m.getName()), m);
+                return messageService.addMessage(userService.getUserId(m.getName()), m);
             }
         }
+
+        return false;
     }
 
     @RequestMapping(value = "getMessageHistory", method = RequestMethod.POST)

@@ -11,7 +11,7 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class TokenService {
     @Value("${jwt.secret}")
-    private String SECRET_KEY = "1";
+    private String SECRET_KEY = "H2e87ty";
 
     private final Token token = new Token();
 

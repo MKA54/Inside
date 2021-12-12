@@ -19,23 +19,23 @@ public class MessageService {
         this.messageDao = messageDao;
     }
 
-    public void addMessage(Long userId, MessageDto messageDto) {
+    public Boolean addMessage(Long userId, MessageDto messageDto) {
         if (messageDto.getMessage().length() == 0) {
             System.out.println("Empty message");
 
-            return;
+            return false;
         }
 
         if (messageDto.getName().length() == 0) {
             System.out.println("Missing name");
 
-            return;
+            return false;
         }
 
         if (userId == null) {
             System.out.println("UserId not found");
 
-            return;
+            return false;
         }
 
         Message message = new Message();
@@ -44,6 +44,7 @@ public class MessageService {
 
         messageDao.create(message);
 
+        return true;
     }
 
     public List<History> getHistoryMessage(Long userId, String message) {
