@@ -3,10 +3,8 @@ package test.inside.service;
 import org.springframework.stereotype.Service;
 import test.inside.dao.MessageDao;
 import test.inside.dto.MessageDto;
-import test.inside.model.History;
 import test.inside.model.Message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -47,7 +45,7 @@ public class MessageService {
         return true;
     }
 
-    public List<History> getHistoryMessage(Long userId, String message) {
+    public List<Message> getHistoryMessage(Long userId, String message) {
         if (!(hasText(message) && message.startsWith("history "))) {
             System.out.println("The message format is not correct");
 
@@ -63,27 +61,6 @@ public class MessageService {
             return null;
         }
 
-        List<Message> allHistory = messageDao.getMessageHistory(userId);
-
-        List<History> result = new ArrayList<>();
-
-        if (messagesCount > allHistory.size()) {
-            allHistory.forEach(m -> result.add(new History(m.getMessage())));
-
-            return result;
-        }
-
-        int startIndex = allHistory.size() - messagesCount;
-        int i = 0;
-
-        for (Message m : allHistory) {
-            if (i >= startIndex) {
-                result.add(new History(m.getMessage()));
-            }
-
-            i++;
-        }
-
-        return result;
+        return messageDao.getMessageHistory(userId, messagesCount);
     }
 }

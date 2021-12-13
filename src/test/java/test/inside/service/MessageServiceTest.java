@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import test.inside.dto.MessageDto;
-import test.inside.model.History;
+import test.inside.model.Message;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ class MessageServiceTest {
 
     @Test
     void getHistoryMessage() {
-        List<History> history = messageService.getHistoryMessage((long) 2, "history 5");
+        List<Message> history = messageService.getHistoryMessage((long) 2, "history 5");
         assertEquals(5, history.size());
 
         assertNull(messageService.getHistoryMessage((long) 2, "5"));

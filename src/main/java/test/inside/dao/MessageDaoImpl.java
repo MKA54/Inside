@@ -12,7 +12,7 @@ public class MessageDaoImpl extends MessageGenericDaoImpl<Message, Long> impleme
     }
 
     @Override
-    public List<Message> getMessageHistory(Long userId) {
-        return getMessageHistoryUsers(userId);
+    public List<Message> getMessageHistory(Long userId, int count) {
+        return getMessageHistoryUsers(userId, count);
     }
 }

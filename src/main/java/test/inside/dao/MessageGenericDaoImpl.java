@@ -31,16 +31,17 @@ public class MessageGenericDaoImpl<T, PK extends Serializable> implements Messag
 
     @Transactional
     @Override
-    public List<T> getMessageHistoryUsers(Long userId) {
+    public List<T> getMessageHistoryUsers(Long userId, int count) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(clazz);
 
         Root<T> root = cq.from(clazz);
 
-        CriteriaQuery<T> select = cq.select(root);
-        cq.where(cb.equal(root.get("userId"), userId));
+        CriteriaQuery<T> select = cq.select(root.get("message"));
+        cq.where(cb.equal(root.get("userId"), userId)).
+                orderBy(cb.desc(root.get("id")));
 
-        TypedQuery<T> q = entityManager.createQuery(select);
+        TypedQuery<T> q = entityManager.createQuery(select).setMaxResults(count);
 
         return q.getResultList();
     }

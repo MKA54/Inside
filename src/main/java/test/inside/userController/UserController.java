@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import test.inside.dto.MessageDto;
-import test.inside.model.History;
+import test.inside.model.Message;
 import test.inside.model.Token;
 import test.inside.model.User;
 import test.inside.service.MessageService;
@@ -54,7 +54,7 @@ public class UserController {
 
     @RequestMapping(value = "getMessageHistory", method = RequestMethod.POST)
     @ResponseBody
-    public List<History> getMessageHistory(@RequestHeader("Authorization") String token, @RequestBody String message) {
+    public List<Message> getMessageHistory(@RequestHeader("Authorization") String token, @RequestBody String message) {
         MessageDto m = gson.fromJson(message, MessageDto.class);
 
         if (tokenService.isToken(token)) {
