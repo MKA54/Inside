@@ -34,3 +34,4 @@
 11) MessageServiceTest тестирует класс src.main.java.test.inside.service.MessageServiceTest
 12) TokenServiceTest тестирует класс src.main.java.test.inside.service.TokenService
 13) UserServiceTest тестирует класс src.main.java.test.inside.service.UserService
+14) В корне присутствует файл Plant!!!

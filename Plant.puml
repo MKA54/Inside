@@ -1,0 +1,57 @@
+@startuml
+actor Actor
+boundary Boundary as UserController
+entity Entity as User
+control Control as UserService
+control Control as TokenService
+
+Actor -> UserController : authorization Request
+UserController -> User : gson.fromJson(user, User.class);
+UserController -> UserService : userService.userValidation(user)
+UserService -> TokenService : tokenService.createToken(user.getName())
+TokenService --> UserService : Token
+UserService --> UserController : Token
+UserController --> Actor: authorization Response Token
+@enduml
+
+@startuml
+actor Actor
+boundary Boundary as UserController
+control Control as MessageService
+entity Entity as Message
+boundary Boundary as MessageDao
+database Database
+
+Actor -> UserController : addMessage Request
+UserController -> MessageDto: gson.fromJson(message, MessageDto.class)
+UserController -> MessageService : userService.userValidation(user)
+MessageService -> Message :new Message, setUserId and setMessage
+MessageService -> MessageDao : messageDao.create(message)
+MessageDao -> MessageGenericDaoImpl: create(Message m)
+MessageGenericDaoImpl -> Database : entityManager.persist(message);
+MessageService --> UserController : boolean
+UserController --> Actor : addMessage Response boolean
+@enduml
+
+
+
+@startuml
+actor Actor
+boundary Boundary as UserController
+control Control as MessageService
+boundary Boundary as MessageDao
+database Database
+collections Collections as MessageHistory
+
+Actor -> UserController : getMessageHistory Request
+UserController -> MessageDto: gson.fromJson(message, MessageDto.class)
+UserController -> MessageService : messageService.getHistoryMessage(userService.getUserId(message.getName()), message.getMessage())
+MessageService -> MessageDao : messageDao.getMessageHistory(userId, messagesCount);
+MessageDao -> MessageGenericDaoImpl: getMessageHistoryUsers(Long userId, int count)
+MessageGenericDaoImpl -> Database : getResultList()
+Database --> MessageGenericDaoImpl : List <Message>
+MessageGenericDaoImpl --> MessageDao : List <Message>
+MessageDao --> MessageService : List <Message>
+MessageService --> UserController : List <Message>
+UserController --> Actor : getMessageHistory Response List <Message>
+@enduml
